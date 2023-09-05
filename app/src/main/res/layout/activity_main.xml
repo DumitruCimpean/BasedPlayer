@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_grey_100"
+    android:id="@+id/mainActivityId"
     tools:context=".MainActivity">
 
 
@@ -109,6 +110,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="gone"
+        tools:context=".MainActivity"
         tools:layout="@layout/fragment_cp" />
 
 

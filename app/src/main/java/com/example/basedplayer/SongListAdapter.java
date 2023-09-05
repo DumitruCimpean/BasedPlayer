@@ -51,6 +51,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
     private MediaPlayer songPlayer;
     ImageView btpCover;
     RelativeLayout bottomPlayer;
+    RelativeLayout mainActivityLayout;
     private GestureDetectorCompat gestureDetector;
 
     final boolean[] isBottomPlayerShown = {false};
@@ -60,10 +61,11 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
     private MediaPlayer mediaPlayer;
 
     // Modify the constructor to accept the MediaPlayer
-    public SongListAdapter(Context context, ArrayList<SongModel> songList, RelativeLayout bottomPlayer, MediaPlayer mediaPlayer) {
+    public SongListAdapter(Context context, ArrayList<SongModel> songList, RelativeLayout bottomPlayer, RelativeLayout mainActivityLayout, MediaPlayer mediaPlayer) {
         this.songList = songList;
         this.context = context;
         this.bottomPlayer = bottomPlayer;
+        this.mainActivityLayout = mainActivityLayout;
         this.mediaPlayer = mediaPlayer;
     }
 
@@ -78,8 +80,6 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
         View view = LayoutInflater.from(context).inflate(R.layout.song_item_layout,parent,false);
         return new SongListAdapter.ViewHolder(view);
     }
-
-
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
@@ -105,26 +105,34 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
         btpPlayPause.setOnClickListener(v -> {
             gob.clickEffectResize(btpPlayPause, context);
             if (songPlayer != null && songPlayer.isPlaying()){
-                pauseSong(songData);
+                pauseSong();
                 btpPlayPause.setImageResource(R.drawable.play_icon);
                 btpTitle.setSelected(false);
+                editor.putBoolean("toggleIsPlaying", false);
             }else if (songPlayer != null && !songPlayer.isPlaying()){
-                resumeSong(songData);
+                resumeSong();
                 btpPlayPause.setImageResource(R.drawable.pause_icon);
                 btpTitle.setSelected(true);
+                editor.putBoolean("toggleIsPlaying", true);
             }
+            editor.apply();
         });
 
 
         int durationInt = Integer.parseInt(songData.getDuration());
         int songSeconds = durationInt / 1000;
         int songMinutes = songSeconds / 60;
+        int songHours = songMinutes / 60;
+        if (songHours > 0){
+            songMinutes %= 60;
+        }
         songSeconds %= 60;
         Glide.with(context)
                 .load(songData.getAlbumArtUri())
                 .placeholder(R.drawable.music_note_box2) // default image
                 .error(R.drawable.music_note_box2) // error image if loading fails
                 .into(holder.songCoverImageView);
+
 
         if (position == currentlyPlayingPosition) {
             int nowPlayingColor = ContextCompat.getColor(context, R.color.faded_blue);
@@ -134,6 +142,8 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
             holder.itemView.setBackgroundColor(defaultColor);
         }
 
+        int finalSongSeconds = songSeconds;
+        int finalSongMinutes = songMinutes;
         holder.itemView.setOnClickListener(view -> {
             gob.clickEffectDarken(holder.itemView);
             ImageView itemViewCover =  holder.itemView.findViewById(R.id.songCoverImageView);
@@ -145,6 +155,11 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
             editor.putString("albumArtUri", songData.getAlbumArtUri().toString());
             editor.putInt("currentSongIndex", position);
             editor.putString("songTitle", songData.getTitle());
+            editor.putString("songArtist", songData.getArtist());
+            editor.putInt("songHours", songHours);
+            editor.putInt("songMinutes", finalSongMinutes);
+            editor.putInt("songSeconds", finalSongSeconds);
+            editor.putBoolean("toggleIsPlaying", true);
             editor.apply();
 
             playSong(songData);
@@ -159,12 +174,9 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
             btpCover.setImageDrawable(holder.songCoverImageView.getDrawable());
             btpTitle.setSelected(false);
             handler.postDelayed( () -> btpTitle.setSelected(true), 2000);
-
             setCurrentlyPlayingPosition(position);
-
-            // Notify the adapter to update the UI
-            notifyDataSetChanged();
             setCurrentlyPlayingSong(songData);
+            notifyDataSetChanged();
         });
     }
 
@@ -173,12 +185,24 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
     }
 
     public void togglePlayback() {
+        SharedPreferences prefs = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        ImageButton pausePlay = bottomPlayer.findViewById(R.id.btpPlayPause);
+        ImageButton cpPausePlay = mainActivityLayout.findViewById(R.id.cpPausePlay);
+
         if (songPlayer != null) {
             if (songPlayer.isPlaying()) {
-                pauseSong(currentlyPlayingSong);
+                pauseSong();
+                pausePlay.setImageResource(R.drawable.play_icon);
+                cpPausePlay.setImageResource(R.drawable.play_icon);
+                editor.putBoolean("toggleIsPlaying", false);
             } else {
-                resumeSong(currentlyPlayingSong);
+                resumeSong();
+                pausePlay.setImageResource(R.drawable.pause_icon);
+                cpPausePlay.setImageResource(R.drawable.pause_icon);
+                editor.putBoolean("toggleIsPlaying", true);
             }
+            editor.apply();
         }
     }
 
@@ -209,13 +233,13 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
         }
     }
 
-    public void pauseSong(SongModel songData) {
+    public void pauseSong() {
         if (songPlayer != null && songPlayer.isPlaying()) {
             songPlayer.pause();
         }
     }
 
-    public void resumeSong (SongModel songData){
+    public void resumeSong (){
         if (songPlayer != null && !songPlayer.isPlaying()){
             songPlayer.start();
         }

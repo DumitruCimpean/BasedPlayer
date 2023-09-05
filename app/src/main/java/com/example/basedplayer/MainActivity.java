@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    // TODO: a lot
+    // TODO: a lot...
 
     RecyclerView recyclerView;
     TextView noSongsText;
@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     TextView btpTitle;
     ImageView btpCover;
     RelativeLayout bottomPlayer;
+    RelativeLayout mainActivityLayout;
 
     MediaPlayer songPlayer = new MediaPlayer();
     boolean firstBoot = true;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         songsTextView = findViewById(R.id.songsTextView);
         btpTitle = findViewById(R.id.btpTitle);
         btpCover = findViewById(R.id.btpCover);
+        mainActivityLayout = findViewById(R.id.mainActivityId);
         bottomPlayer = findViewById(R.id.bottomPlayer);
         bottomPlayer.setVisibility(View.GONE);
 
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                     cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)),
                     cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)),
                     cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))
-                    );
+            );
 
             if (new File(songData.getPath()).exists()){
                 songList.add(songData);
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 noSongsText.setVisibility(View.VISIBLE);
             } else {
                 recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                recyclerView.setAdapter(new SongListAdapter(getApplicationContext(), songList, bottomPlayer, songPlayer));
+                recyclerView.setAdapter(new SongListAdapter(getApplicationContext(), songList, bottomPlayer, mainActivityLayout, songPlayer));
             }
         }
         cursor.close();
@@ -120,44 +122,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showFragment() {
-            SharedPreferences prefs = getSharedPreferences("preferences", Context.MODE_PRIVATE);
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.setCustomAnimations(R.anim.slide_up, R.anim.slide_up);
+        recyclerView.setVisibility(View.INVISIBLE);
+        SharedPreferences prefs = getSharedPreferences("preferences", Context.MODE_PRIVATE);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_up, R.anim.slide_up);
 
-            // Replace with your logic to get the selected song
-            SongModel selectedSong = songList.get(prefs.getInt("currentSongIndex", 0));
-            CpFragment cpFragment = CpFragment.newInstance(selectedSong);
+        // logic to get the selected song
+        SongModel selectedSong = songList.get(prefs.getInt("currentSongIndex", 0));
+        CpFragment cpFragment = CpFragment.newInstance(selectedSong);
 
 
-            transaction.replace(R.id.fragmentContainer, cpFragment, "CpFragment");
-            transaction.addToBackStack(null);
-            transaction.commit();
-            if (firstBoot){
-                findViewById(R.id.fragmentContainer).setVisibility(View.VISIBLE);
-                firstBoot = false;
-            }
+        transaction.replace(R.id.fragmentContainer, cpFragment, "CpFragment");
+        transaction.addToBackStack(null);
+        transaction.commit();
+        if (firstBoot){
+            findViewById(R.id.fragmentContainer).setVisibility(View.VISIBLE);
+            firstBoot = false;
+        }
 
 
     }
 
     private void hideFragment() {
+        recyclerView.setVisibility(View.VISIBLE);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_down, R.anim.slide_down);
 
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.setCustomAnimations(R.anim.slide_down, R.anim.slide_down);
-
-            Fragment fragment = getSupportFragmentManager().findFragmentByTag("CpFragment");
-            if (fragment != null) {
-                transaction.hide(fragment);
-                transaction.commit();
-                if (firstBoot){
-                    findViewById(R.id.fragmentContainer).setVisibility(View.GONE);
-                }
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("CpFragment");
+        if (fragment != null) {
+            transaction.hide(fragment);
+            transaction.commit();
+            if (firstBoot){
+                findViewById(R.id.fragmentContainer).setVisibility(View.GONE);
+            }
 
         }
     }
 
     public SongListAdapter getSongListAdapter() {
-        // Return the instance of your SongListAdapter here
         if (recyclerView != null) {
             return (SongListAdapter) recyclerView.getAdapter();
         }

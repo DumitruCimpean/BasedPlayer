@@ -5,7 +5,7 @@
     android:id="@+id/baseLayoutCP"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_grey_100"
+    android:background="@color/dark_grey_200"
     tools:context=".CpFragment">
 
     <androidx.cardview.widget.CardView
@@ -35,34 +35,67 @@
         android:id="@+id/cpPausePlay"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/rectangle_grey"
+        android:background="@color/transparent"
         android:padding="15dp"
-        android:paddingStart="25dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/play_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.79"
+        app:layout_constraintVertical_bias="0.872"
         app:layout_constraintWidth_percent="0.2" />
 
     <TextView
         android:id="@+id/cpTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:textColor="@color/white"
         android:autoSizeTextType="uniform"
         android:gravity="center"
-        android:text="asdafsa"
+        android:text="Pure As Snow"
+        android:textColor="@color/white"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollHorizontally="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/albumCoverCardView"
+        app:layout_constraintVertical_bias="0.155" />
+
+    <TextView
+        android:id="@+id/cpArtistTextView"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:text="MONO"
+        android:textColor="@color/darker_white"
+        app:layout_constraintBottom_toTopOf="@+id/cpPausePlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cpTitleTextView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/songDurationTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="11:32"
+        android:textColor="@color/darker_white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.957"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.894" />
+        app:layout_constraintVertical_bias="0.977" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

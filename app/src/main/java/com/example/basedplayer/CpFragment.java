@@ -34,14 +34,44 @@ public class CpFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_cp, container, false);
         SharedPreferences prefs = getContext().getSharedPreferences("preferences", Context.MODE_PRIVATE);
+        MyGlobals gob = new MyGlobals(getContext());
 
         playPauseButton = rootView.findViewById(R.id.cpPausePlay);
         TextView songTitleTextView = rootView.findViewById(R.id.cpTitleTextView);
+        songTitleTextView.setSelected(true);
+        TextView songArtistText = rootView.findViewById(R.id.cpArtistTextView);
+        TextView songDurationText = rootView.findViewById(R.id.songDurationTextView);
         ImageView coverArt = rootView.findViewById(R.id.albumCoverImageView);
 
-
+        boolean toggleIsPlaying = prefs.getBoolean("toggleIsPlaying", false);
         String albumArtUri = prefs.getString("albumArtUri", "R.drawable.music_note");
         String songTitle = prefs.getString("songTitle", "Error loading title");
+        String songArtist = prefs.getString("songArtist", "Error loading artist");
+        int songHours = prefs.getInt("songHours", 0);
+        int songMinutes = prefs.getInt("songMinutes", 0);
+        int songSeconds = prefs.getInt("songSeconds", 0);
+
+        songArtistText.setText(songArtist);
+
+        if (songSeconds < 10) {
+            if (songMinutes < 10){
+                songDurationText.setText(0 + songMinutes + ":" + 0 + songSeconds);
+            }else{
+                songDurationText.setText(songMinutes + ":" + 0 + songSeconds);
+            }
+        }else {
+            songDurationText.setText(songMinutes + ":" + songSeconds);
+        }
+
+        if (songHours > 0){
+            songDurationText.setText(songHours + ":" + songMinutes + ":" + songSeconds);
+        }
+
+        if (toggleIsPlaying){
+            playPauseButton.setImageResource(R.drawable.pause_icon);
+        }else {
+            playPauseButton.setImageResource(R.drawable.play_icon);
+        }
         songTitleTextView.setText(songTitle);
 
         Glide.with(this)
@@ -51,13 +81,10 @@ public class CpFragment extends Fragment {
                 .into(coverArt);
 
 
-        playPauseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Call a method in the adapter to control playback
-                if (getAdapter() != null) {
-                    getAdapter().togglePlayback();
-                }
+        playPauseButton.setOnClickListener(view -> {
+            gob.clickEffectResize(playPauseButton, getContext());
+            if (getAdapter() != null) {
+                getAdapter().togglePlayback();
             }
         });
 
@@ -74,3 +101,4 @@ public class CpFragment extends Fragment {
     }
 
 }
+
