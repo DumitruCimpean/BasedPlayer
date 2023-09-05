@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/dark_grey_100"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
+    android:layout_marginTop="2dp">
+
+
+    <TextView
+        android:id="@+id/songTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/cardViewCover"
+        android:text="Pure as Snow"
+        android:layout_toStartOf="@id/moreDetails"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/songArtistTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/songTitleTextView"
+        android:layout_toEndOf="@id/cardViewCover"
+        android:layout_toStartOf="@id/moreDetails"
+        android:textColor="#aaaaaa"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="10dp"
+        android:text="MONO"/>
+
+    <ImageButton
+        android:id="@+id/moreDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"/>
+
+    <androidx.cardview.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cardViewCover"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="8dp"
+        android:background="@color/dark_grey_200"
+        android:outlineSpotShadowColor="@color/dark_grey_100"
+        app:cardCornerRadius="8dp"
+        app:cardBackgroundColor="@color/dark_grey_100">
+
+        <ImageView
+            android:id="@+id/songCoverImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:background="@color/dark_grey_100"/>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

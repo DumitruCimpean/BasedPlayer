@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_grey_100"
+    tools:context=".MainActivity">
+
+
+    <TextView
+        android:id="@+id/songsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SONGS"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:layout_centerHorizontal="true"
+        android:padding="5dp"/>
+
+    <TextView
+        android:id="@+id/noSongsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="NO SONGS"
+        android:visibility="invisible"
+        android:alpha="0.4"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/songsTextView"/>
+
+    <RelativeLayout
+        android:id="@+id/bottomPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/rectangle_grey">
+
+        <androidx.cardview.widget.CardView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/cardViewCover"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_margin="10dp"
+            android:background="@color/dark_grey_200"
+            app:cardCornerRadius="6dp"
+            android:outlineSpotShadowColor="@color/dark_grey_200"
+            app:cardBackgroundColor="@color/dark_grey_100">
+
+
+            <ImageView
+                android:id="@+id/btpCover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/music_note" />
+
+        </androidx.cardview.widget.CardView>
+
+
+        <TextView
+            android:id="@+id/btpTitle"
+            android:layout_width="match_parent"
+            android:layout_toStartOf="@id/btpPlayPause"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="No song playing"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:scrollHorizontally="true"
+            android:layout_toEndOf="@id/cardViewCover"
+            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"/>
+
+        <ImageButton
+            android:id="@+id/btpPlayPause"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="10dp"
+            android:background="@color/dark_grey_200"
+            android:src="@drawable/pause_icon"
+            android:scaleType="fitCenter"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dp"/>
+
+    </RelativeLayout>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainer"
+        android:name="com.example.basedplayer.CpFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        tools:layout="@layout/fragment_cp" />
+
+
+</RelativeLayout>
